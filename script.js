@@ -1,40 +1,53 @@
-const listEl = document.getElementById("chemicalList");
-const searchInput = document.getElementById("searchInput");
+const chemicals = [
+  {
+    name: "Brakleen Brake Parts Cleaner",
+    signal: "Danger",
+    pictograms: ["flame", "gas-cylinder", "exclamation"],
+    sds: "https://www.crcindustries.com/media/msdsen/msds_en-1008009.pdf"
+  },
+  {
+    name: "Simple Green Industrial Cleaner",
+    signal: "Not Classified as Hazardous",
+    pictograms: [],
+    sds: "https://cdn.simplegreen.com/downloads/SDS_EN-US_SimpleGreenIndustrialCleanerDegreaser.pdf"
+  },
+  {
+    name: "Ultratane Butane Fuel",
+    signal: "Danger",
+    pictograms: ["flame", "gas-cylinder"],
+    sds: "https://www.masterappliance.com/content/sites/default/files/simple_products/downloads/2024-SDS-Ultratane-Butane-English.pdf"
+  }
+];
 
-const sortedChemicals = chemicals.sort((a, b) =>
-  a.name.localeCompare(b.name)
-);
+// Alphabetical
+chemicals.sort((a, b) => a.name.localeCompare(b.name));
 
-function renderList(filter = "") {
-  listEl.innerHTML = "";
+const list = document.getElementById("list");
+const search = document.getElementById("search");
 
-  sortedChemicals
-    .filter(c =>
-      c.name.toLowerCase().includes(filter.toLowerCase())
-    )
+function render(filter = "") {
+  list.innerHTML = "";
+
+  chemicals
+    .filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
     .forEach(c => {
-      const div = document.createElement("div");
-      div.className = "chemical";
+      const item = document.createElement("div");
+      item.className = "item";
 
-      div.innerHTML = `
+      const pics = c.pictograms
+        .map(p => `<img src="pictograms/${p}.png">`)
+        .join("");
+
+      item.innerHTML = `
         <h2>${c.name}</h2>
-        <p class="signal">${c.signalWord}</p>
-        <div class="pictograms">
-          ${c.pictograms
-            .map(p => `pictograms/${p}.png`)
-            .join("")}
-        </div>
-        ${c.sdsUrl}
-          View SDS
-        </a>
+        <p class="signal">${c.signal}</p>
+        <div class="pics">${pics}</div>
+        <a href="${c.sds}" target="_blank">View SDS</a>
       `;
 
-      listEl.appendChild(div);
+      list.appendChild(item);
     });
 }
 
-searchInput.addEventListener("input", e => {
-  renderList(e.target.value);
-});
-
-renderList();
+search.addEventListener("input", e => render(e.target.value));
+render();

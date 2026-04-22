@@ -29,14 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const div = document.createElement("div");
         div.className = "item";
 
-        const pictos = c.pictograms
-          .map(p => `<img src="pictograms/${p}.png" alt="${p} pictogram">`)
-          .join("");
+        // ✅ THIS IS THE CRITICAL FIX
+        const pictosHTML = c.pictograms
+          .map(p => `<img src="pictograms/${p}.png" alt="${p} pictogram" height="40">`)
+          .join(" ");
 
         div.innerHTML = `
           <h2>${c.name}</h2>
           <p class="signal">${c.signal}</p>
-          <div class="pics">${pictos}</div>
+          <div class="pics">${pictosHTML}</div>
           <a href="${c.sds}" target="_blank">View Safety Data Sheet</a>
         `;
 
